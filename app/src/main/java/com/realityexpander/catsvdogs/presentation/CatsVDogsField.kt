@@ -10,7 +10,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -26,12 +25,13 @@ fun CatsVDogsField(
     playerOColor: Color = Color.Red,
     onTapInField: (x: Int, y: Int) -> Unit
 ) {
+
     Canvas(
         modifier = modifier
             .pointerInput(true) {
                 detectTapGestures {
-                    val x = (4 * it.x.toInt() / size.width)
-                    val y = (4 * it.y.toInt() / size.height)
+                    val x = (5 * it.x.toInt() / size.width)
+                    val y = (5 * it.y.toInt() / size.height)
                     onTapInField(x, y)
                 }
             }
@@ -41,8 +41,8 @@ fun CatsVDogsField(
         state.field.forEachIndexed { y, _ ->
             state.field[y].forEachIndexed { x, player ->
                 val offset = Offset(
-                    x = x * size.width * (1 / 4f) + size.width / 8f,
-                    y = y * size.height * (1 / 4f) + size.height / 6f
+                    x = x * size.width * (1 / 5f) + size.width / 10f,
+                    y = y * size.height * (1 / 5f) + size.height / 7f,
                 )
                 if(player == 'X') {
                     drawX(
@@ -65,14 +65,14 @@ private fun DrawScope.drawO(
     center: Offset,
     size: Size = Size(50.dp.toPx(), 50.dp.toPx())
 ) {
-    drawCircle(
-        color = color,
-        center = center,
-        radius = size.width / 2f,
-        style = Stroke(
-            width = 3.dp.toPx()
-        )
-    )
+//    drawCircle(
+//        color = color,
+//        center = center,
+//        radius = size.width / 2f,
+//        style = Stroke(
+//            width = 3.dp.toPx()
+//        )
+//    )
 
     drawContext.canvas.nativeCanvas.drawText(
         "🐕", // O
@@ -91,32 +91,32 @@ private fun DrawScope.drawX(
     center: Offset,
     size: Size = Size(50.dp.toPx(), 50.dp.toPx())
 ) {
-    drawLine(
-        color = color,
-        start = Offset(
-            x = center.x - size.width / 2f,
-            y = center.y - size.height / 2f
-        ),
-        end = Offset(
-            x = center.x + size.width / 2f,
-            y = center.y + size.height / 2f
-        ),
-        strokeWidth = 3.dp.toPx(),
-        cap = StrokeCap.Round
-    )
-    drawLine(
-        color = color,
-        start = Offset(
-            x = center.x - size.width / 2f,
-            y = center.y + size.height / 2f
-        ),
-        end = Offset(
-            x = center.x + size.width / 2f,
-            y = center.y - size.height / 2f
-        ),
-        strokeWidth = 3.dp.toPx(),
-        cap = StrokeCap.Round
-    )
+//    drawLine(
+//        color = color,
+//        start = Offset(
+//            x = center.x - size.width / 2f,
+//            y = center.y - size.height / 2f
+//        ),
+//        end = Offset(
+//            x = center.x + size.width / 2f,
+//            y = center.y + size.height / 2f
+//        ),
+//        strokeWidth = 3.dp.toPx(),
+//        cap = StrokeCap.Round
+//    )
+//    drawLine(
+//        color = color,
+//        start = Offset(
+//            x = center.x - size.width / 2f,
+//            y = center.y + size.height / 2f
+//        ),
+//        end = Offset(
+//            x = center.x + size.width / 2f,
+//            y = center.y - size.height / 2f
+//        ),
+//        strokeWidth = 3.dp.toPx(),
+//        cap = StrokeCap.Round
+//    )
 
     drawContext.canvas.nativeCanvas.drawText(
         "🐈", // X
@@ -133,13 +133,13 @@ private fun DrawScope.drawX(
 private fun DrawScope.drawField() {
     // 1st vertical line
     drawLine(
-        color = Color.Black,
+        color = Color.LightGray,
         start = Offset(
-            x = size.width * (1 / 4f),
+            x = size.width * (1 / 5f),
             y = 0f
         ),
         end = Offset(
-            x = size.width * (1 / 4f),
+            x = size.width * (1 / 5f),
             y = size.height
         ),
         strokeWidth = 3.dp.toPx(),
@@ -148,13 +148,13 @@ private fun DrawScope.drawField() {
 
     // 2nd vertical line
     drawLine(
-        color = Color.Black,
+        color = Color.LightGray,
         start = Offset(
-            x = size.width * (2 / 4f),
+            x = size.width * (2 / 5f),
             y = 0f
         ),
         end = Offset(
-            x = size.width * (2 / 4f),
+            x = size.width * (2 / 5f),
             y = size.height
         ),
         strokeWidth = 3.dp.toPx(),
@@ -163,13 +163,28 @@ private fun DrawScope.drawField() {
 
     // 3rd vertical line
     drawLine(
-        color = Color.Black,
+        color = Color.LightGray,
         start = Offset(
-            x = size.width * (3 / 4f),
+            x = size.width * (3 / 5f),
             y = 0f
         ),
         end = Offset(
-            x = size.width * (3 / 4f),
+            x = size.width * (3 / 5f),
+            y = size.height
+        ),
+        strokeWidth = 3.dp.toPx(),
+        cap = StrokeCap.Round
+    )
+
+    // 4th vertical line
+    drawLine(
+        color = Color.LightGray,
+        start = Offset(
+            x = size.width * (4 / 5f),
+            y = 0f
+        ),
+        end = Offset(
+            x = size.width * (4 / 5f),
             y = size.height
         ),
         strokeWidth = 3.dp.toPx(),
@@ -178,14 +193,14 @@ private fun DrawScope.drawField() {
 
     // 1st horizontal line
     drawLine(
-        color = Color.Black,
+        color = Color.LightGray,
         start = Offset(
             x = 0f,
-            y = size.height * (1 / 4f)
+            y = size.height * (1 / 5f)
         ),
         end = Offset(
             x = size.width,
-            y = size.height * (1 / 4f)
+            y = size.height * (1 / 5f)
         ),
         strokeWidth = 3.dp.toPx(),
         cap = StrokeCap.Round
@@ -193,29 +208,44 @@ private fun DrawScope.drawField() {
 
     // 2nd horizontal line
     drawLine(
-        color = Color.Black,
+        color = Color.LightGray,
         start = Offset(
             x = 0f,
-            y = size.height * (2 / 4f)
+            y = size.height * (2 / 5f)
         ),
         end = Offset(
             x = size.width,
-            y = size.height * (2 / 4f)
+            y = size.height * (2 / 5f)
         ),
         strokeWidth = 3.dp.toPx(),
         cap = StrokeCap.Round
     )
 
-    // 2nd horizontal line
+    // 3rd horizontal line
     drawLine(
-        color = Color.Black,
+        color = Color.LightGray,
         start = Offset(
             x = 0f,
-            y = size.height * (3 / 4f)
+            y = size.height * (3 / 5f)
         ),
         end = Offset(
             x = size.width,
-            y = size.height * (3 / 4f)
+            y = size.height * (3 / 5f)
+        ),
+        strokeWidth = 3.dp.toPx(),
+        cap = StrokeCap.Round
+    )
+
+    // 4th horizontal line
+    drawLine(
+        color = Color.LightGray,
+        start = Offset(
+            x = 0f,
+            y = size.height * (4 / 5f)
+        ),
+        end = Offset(
+            x = size.width,
+            y = size.height * (4 / 5f)
         ),
         strokeWidth = 3.dp.toPx(),
         cap = StrokeCap.Round
@@ -224,7 +254,7 @@ private fun DrawScope.drawField() {
 
 @Preview(showBackground = true)
 @Composable
-fun TicTacToeFieldPreview() {
+fun CatsVDogsPreview() {
     CatsVDogsField(
         state = GameState(
             field = arrayOf(

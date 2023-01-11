@@ -13,10 +13,11 @@ data class GameState(
     companion object {
         fun emptyField(): Array<Array<Char?>> {
             return arrayOf(
-                arrayOf(null, null, null, null),
-                arrayOf(null, null, null, null),
-                arrayOf(null, null, null, null),
-                arrayOf(null, null, null, null),
+                arrayOf(null, null, null, null, null),
+                arrayOf(null, null, null, null, null),
+                arrayOf(null, null, null, null, null),
+                arrayOf(null, null, null, null, null),
+                arrayOf(null, null, null, null, null),
             )
         }
     }

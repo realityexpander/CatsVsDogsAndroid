@@ -28,10 +28,6 @@ class CatsVDogsViewModel @Inject constructor(
         .onStart { _isConnecting.value = true }
         .onEach { gameState ->
             _isConnecting.value = false
-
-
-            println("thisPlayer: $thisPlayer")
-
             println("Received state: $gameState")
         }
         .catch { t -> _showConnectionError.value = t is ConnectException }
