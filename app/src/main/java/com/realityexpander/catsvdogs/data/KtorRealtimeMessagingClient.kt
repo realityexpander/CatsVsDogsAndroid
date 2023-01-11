@@ -29,6 +29,7 @@ class KtorRealtimeMessagingClient(
                 .mapNotNull {
                     val text = it.readText()
 
+                    // Special case for the first message
                     if(text.contains("playerName")) {
                         thisPlayer = Json.decodeFromString<Player>(text).playerName
                         GameState()
