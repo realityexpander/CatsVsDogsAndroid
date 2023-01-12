@@ -1,4 +1,4 @@
-# CatsVsDogsAndroid
+# Cats Vs. Dogs - Android App
 Android app for the CatsVsDogs 2-player game
 
 [<img src="https://user-images.githubusercontent.com/5157474/211963070-a38f60f3-7b09-4d20-b9ba-3b83c866c821.png" width=200/>](https://user-images.githubusercontent.com/5157474/211963070-a38f60f3-7b09-4d20-b9ba-3b83c866c821.png)
