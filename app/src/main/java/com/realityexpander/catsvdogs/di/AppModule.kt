@@ -1,7 +1,7 @@
 package com.realityexpander.catsvdogs.di
 
-import com.realityexpander.catsvdogs.data.KtorRealtimeMessagingClient
-import com.realityexpander.catsvdogs.data.RealtimeMessagingClient
+import com.realityexpander.catsvdogs.data.KtorRealtimeMessagingClientImpl
+import com.realityexpander.catsvdogs.data.IRealtimeMessagingClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRealtimeMessagingClient(httpClient: HttpClient): RealtimeMessagingClient {
-        return KtorRealtimeMessagingClient(httpClient)
+    fun provideRealtimeMessagingClient(httpClient: HttpClient): IRealtimeMessagingClient {
+        return KtorRealtimeMessagingClientImpl(httpClient)
     }
 }

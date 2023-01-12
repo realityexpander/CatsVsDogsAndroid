@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.realityexpander.catsvdogs.data.GameState
 import com.realityexpander.catsvdogs.data.MakeTurn
-import com.realityexpander.catsvdogs.data.RealtimeMessagingClient
+import com.realityexpander.catsvdogs.data.IRealtimeMessagingClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ data class Player(val playerName: String, val id: String)
 
 @HiltViewModel
 class CatsVDogsViewModel @Inject constructor(
-    private val client: RealtimeMessagingClient
+    private val client: IRealtimeMessagingClient
 ): ViewModel() {
 
 

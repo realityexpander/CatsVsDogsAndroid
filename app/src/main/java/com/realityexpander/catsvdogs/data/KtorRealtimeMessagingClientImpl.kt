@@ -11,9 +11,9 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class KtorRealtimeMessagingClient(
+class KtorRealtimeMessagingClientImpl(
     private val client: HttpClient
-): RealtimeMessagingClient {
+): IRealtimeMessagingClient {
 
     private var session: WebSocketSession? = null
 
