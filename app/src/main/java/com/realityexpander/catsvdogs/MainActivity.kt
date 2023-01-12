@@ -144,6 +144,7 @@ class MainActivity : ComponentActivity() {
                                     "Goal: World Domination\n" +
                                             "Occupy Any 4 out of 5 sectors in any row, column or diagonal wins.",
                                     fontSize = 20.sp,
+                                    color = Color.Black,
                                     textAlign = TextAlign.Start
                                 )
                             }
