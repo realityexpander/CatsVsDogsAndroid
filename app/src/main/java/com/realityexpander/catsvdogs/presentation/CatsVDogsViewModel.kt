@@ -24,7 +24,7 @@ class CatsVDogsViewModel @Inject constructor(
 
 
     val state = client
-        .getGameStateStream()
+        .getGameStateFlow()
         .onStart { _isConnecting.value = true }
         .onEach { gameState ->
             _isConnecting.value = false

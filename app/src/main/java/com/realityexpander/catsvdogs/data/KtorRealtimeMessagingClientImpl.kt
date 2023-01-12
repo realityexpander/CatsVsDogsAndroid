@@ -17,7 +17,7 @@ class KtorRealtimeMessagingClientImpl(
 
     private var session: WebSocketSession? = null
 
-    override fun getGameStateStream(): Flow<GameState> {
+    override fun getGameStateFlow(): Flow<GameState> {
         return flow {
             session = client.webSocketSession {
                 url("ws://192.168.0.186:8080/play/socket")
@@ -26,16 +26,16 @@ class KtorRealtimeMessagingClientImpl(
                 .incoming
                 .consumeAsFlow()
                 .filterIsInstance<Frame.Text>()
-                .mapNotNull {
-                    val text = it.readText()
+                .mapNotNull { frame ->
+                    val frameText = frame.readText()
 
-                    // Special case for the first message
-                    if(text.contains("playerName")) {
-                        thisPlayer = Json.decodeFromString<Player>(text).playerName
+                    // Special case for the first message (user player X or O)
+                    if(frameText.contains("playerName")) {
+                        thisPlayer = Json.decodeFromString<Player>(frameText).playerName
                         GameState()
                     }
                     else
-                        Json.decodeFromString<GameState>(text)
+                        Json.decodeFromString<GameState>(frameText)
                 }
 
             emitAll(gameStates)
