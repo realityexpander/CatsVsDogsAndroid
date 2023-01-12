@@ -6,3 +6,11 @@ Android app for the CatsVsDogs 2-player game
 [<img src="https://user-images.githubusercontent.com/5157474/211963129-0fa731fe-9262-4793-a8e0-05d7952a6dd0.png" width=200/>](https://user-images.githubusercontent.com/5157474/211963129-0fa731fe-9262-4793-a8e0-05d7952a6dd0.png)
 
 Uses Ktor server for backend, here: https://github.com/realityexpander/com.realityexpander.ktor-catsvdogs
+
+## Tech
+* Web Sockets
+* Hilt
+* Compose
+* Coroutines
+* Flow
+* MVVM Architecture
