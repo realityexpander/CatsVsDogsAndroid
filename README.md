@@ -14,3 +14,4 @@ Uses Ktor server for backend, here: https://github.com/realityexpander/com.reali
 * Coroutines
 * Flow
 * MVVM Architecture
+* Ktor server written 100% in Kotlin
