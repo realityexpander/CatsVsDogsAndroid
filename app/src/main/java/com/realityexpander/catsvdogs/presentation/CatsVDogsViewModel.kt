@@ -6,6 +6,8 @@ import com.realityexpander.catsvdogs.data.GameState
 import com.realityexpander.catsvdogs.data.MakeTurn
 import com.realityexpander.catsvdogs.data.IRealtimeMessagingClient
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -22,22 +24,58 @@ class CatsVDogsViewModel @Inject constructor(
     private val client: IRealtimeMessagingClient
 ): ViewModel() {
 
-
-    val state = client
-        .getGameStateFlow()
-        .onStart { _isConnecting.value = true }
-        .onEach { gameState ->
-            _isConnecting.value = false
-            println("Received state: $gameState")
-        }
-        .catch { t -> _showConnectionError.value = t is ConnectException }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), GameState())
+    private fun getGameStateFlow() =
+        client
+            .getGameStateFlow()
+            .onStart { _isConnecting.value = true }
+            .onEach { gameState ->
+                _isConnecting.value = false
+                println("Received state: $gameState")
+            }
+            .catch { t ->
+                println(".getGameStateFlow() Error: $t")
+                _showConnectionError.value = t is ConnectException
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                GameState()
+            )
+    var state = getGameStateFlow()
 
     private val _isConnecting = MutableStateFlow(false)
     val isConnecting = _isConnecting.asStateFlow()
 
     private val _showConnectionError = MutableStateFlow(false)
     val showConnectionError = _showConnectionError.asStateFlow()
+
+    init {
+        pingService()
+    }
+
+    private fun pingService() {
+        viewModelScope.launch {
+            while(true) {
+
+                try {
+                    state = getGameStateFlow()
+                    client.handlePings(
+                        onSuccess = {
+                            println("Ping received")
+                            _showConnectionError.value = false
+                        }
+                    )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    println("Error handling pings: $e")
+                    _showConnectionError.value = true
+                }
+
+                delay(1000)
+            }
+        }
+    }
 
     fun finishTurn(x: Int, y: Int) {
         if(state.value.field[y][x] != null || state.value.winningPlayer != null) {

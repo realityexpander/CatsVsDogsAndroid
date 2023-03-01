@@ -74,7 +74,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0"
 
     // Ktor
-    def ktor_version = "1.6.3"
+//    def ktor_version = "1.6.3"
+    def ktor_version = "2.2.4"
     implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "io.ktor:ktor-client-cio:$ktor_version"
     implementation "io.ktor:ktor-client-websockets:$ktor_version"

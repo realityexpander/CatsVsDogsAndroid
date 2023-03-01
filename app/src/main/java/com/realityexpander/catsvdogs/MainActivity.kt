@@ -39,9 +39,13 @@ import kotlinx.serialization.json.Json.Default.configuration
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        CatsVDogsApp.userId = (applicationContext as CatsVDogsApp).getUserId(this)
+
         setContent {
             CatsVDogsTheme {
                 val viewModel = hiltViewModel<CatsVDogsViewModel>()
@@ -52,6 +56,7 @@ class MainActivity : ComponentActivity() {
 
                 Box(modifier = Modifier
                     .fillMaxSize()
+                    .background(Color.Black)
                 ) {
                     Image(
                         painterResource(R.drawable.img),"content description",
@@ -70,7 +75,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Text(
                             text = "Couldn't connect to the server",
-                            color = MaterialTheme.colors.error
+                            color = MaterialTheme.colors.error,
+                            fontSize = 20.sp
                         )
                     }
                     return@CatsVDogsTheme
@@ -177,8 +183,7 @@ class MainActivity : ComponentActivity() {
                     if(isConnecting) {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.White),
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
