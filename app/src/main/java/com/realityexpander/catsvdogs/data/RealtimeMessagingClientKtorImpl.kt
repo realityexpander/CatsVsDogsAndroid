@@ -47,7 +47,7 @@ class RealtimeMessagingClientKtorImpl(
                 .consumeAsFlow()
                 .filterIsInstance<Frame.Text>()
                 .also {
-                    println("gameStates: $it")
+                    println("gameStates: frame= $it")
                 }
                 .mapNotNull { frame ->
                     val frameText = frame.readText()
@@ -57,8 +57,15 @@ class RealtimeMessagingClientKtorImpl(
                         thisPlayer = Json.decodeFromString<Player>(frameText).playerName
                         GameState()
                     }
-                    else
+                    else if(frameText.contains("ping")) {
+                        //println("Received ping")
+                        session?.outgoing?.send(Frame.Text("pong"))
+                        null
+                    }
+                    else {
+                        // Decode the frame text into a GameState object
                         Json.decodeFromString<GameState>(frameText)
+                    }
                 }
 //                .retryWhen { cause, attempt ->  // Retry on error
                     //println(".retryWhen cause: ${cause.localizedMessage}")
@@ -90,29 +97,30 @@ class RealtimeMessagingClientKtorImpl(
         }
 
         while(true) {
-            var isFinished = false
-            var retryCount = 0
 
-            println("Sending ping...")
+            //println("Sending ping...(1) ")
             yield()
-
-            // check connection
-
 
             try {
                 if ((pingSession as DefaultClientWebSocketSession).isActive) {
                     yield()
+
+                    // Launch this in its own coroutine so we can perform timeout.
+                    // Note: This should be handled by the ktor client, but it doesn't seem to be working.
+                    // This is a workaround.
+                    //   See:
+                    // https://youtrack.jetbrains.com/issue/KTOR-5418
+                    // https://youtrack.jetbrains.com/issue/KTOR-3504
+                    // https://youtrack.jetbrains.com/issue/KTOR-2504
+                    var isFinished = false
                     CoroutineScope(Dispatchers.Main).launch {
-                        println("Sending ping... (1)")
-                        pingSession?.outgoing?.send(
+                        pingSession?.outgoing?.send(  // this may freeze if server is dead (unknown reason)
                             Frame.Text("ping")
                         )
                         isFinished = true
                     }
-//                pingSession?.outgoing?.send(
-//                    Frame.Text("ping")
-//                )
-                    retryCount = 0
+
+                    var retryCount = 0
                     while (
                         !isFinished
 //                    && (pingSession as DefaultClientWebSocketSession).isActive
@@ -122,7 +130,6 @@ class RealtimeMessagingClientKtorImpl(
                     ) {
                         delay(250)
                         retryCount++
-                        println("Sending ping... (1) - retryCount: $retryCount")
                     }
 
                     if(retryCount >= 10) {
@@ -130,9 +137,9 @@ class RealtimeMessagingClientKtorImpl(
                         throw ConnectException("Server is down - send ping failed - retry count exceeded")
                     }
 
-                    println("Sending ping... (2) Success")
+                    //println("Sending ping. (2) Success")
                 } else {
-                    println("Sending ping... connection is dead")
+                    println("Sending ping. connection is unresponsive")
                     throw ConnectException("Server is down - send ping failed")
                 }
             } catch (e: CancellationException) {
@@ -142,32 +149,17 @@ class RealtimeMessagingClientKtorImpl(
                 throw ConnectException("Server is down - ${e.localizedMessage}")
             }
 
-
-//            withTimeout(1000) {
-//                if((pingSession as DefaultClientWebSocketSession).isActive) {
-//                    yield()
-//                    pingSession?.outgoing?.send(
-//                        Frame.Text("ping")
-//                    )
-//                    println("Sending ping... (2)")
-//                } else {
-//                    println("Sending ping... connection is dead")
-//                    throw ConnectException("Server is down - send ping failed")
-//                }
-//            }
             onSuccess()
             delay(1000)
 
-            // Check if connection is still alive
+            // Check for return pong
             withTimeout(1000) {
-
                 if (pingSession?.incoming?.isEmpty == true) {
-                    println("Connection is dead")
                     pingSession?.close()
                     pingSession = null
                     throw ConnectException("Server is down")
                 }
-                println("Connection is alive")
+                //println("Connection is alive")
             }
         }
     }

@@ -53,30 +53,6 @@ class CatsVDogsViewModel @Inject constructor(
         pingService()
     }
 
-    private fun pingService() {
-        viewModelScope.launch {
-            while(true) {
-
-                try {
-                    state = getGameStateFlow()
-                    client.handlePings(
-                        onSuccess = {
-                            println("Ping received")
-                            _showConnectionError.value = false
-                        }
-                    )
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    println("Error handling pings: $e")
-                    _showConnectionError.value = true
-                }
-
-                delay(1000)
-            }
-        }
-    }
-
     fun finishTurn(x: Int, y: Int) {
         if(state.value.field[y][x] != null || state.value.winningPlayer != null) {
             return
@@ -91,6 +67,30 @@ class CatsVDogsViewModel @Inject constructor(
         super.onCleared()
         viewModelScope.launch {
             client.close()
+        }
+    }
+
+    private fun pingService() {
+        viewModelScope.launch {
+            while(true) {
+
+                try {
+                    state = getGameStateFlow()
+                    client.handlePings(
+                        onSuccess = {
+                            //println("Ping received")
+                            _showConnectionError.value = false
+                        }
+                    )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    println("Error handling pings: $e")
+                    _showConnectionError.value = true
+                }
+
+                delay(1000)
+            }
         }
     }
 }

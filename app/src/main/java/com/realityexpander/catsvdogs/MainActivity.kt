@@ -12,6 +12,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -54,6 +55,10 @@ class MainActivity : ComponentActivity() {
                 val showConnectionError by viewModel.showConnectionError.collectAsState()
                 val config = LocalConfiguration.current
 
+                SideEffect {
+                    println("state: $state")
+                }
+
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
@@ -74,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Couldn't connect to the server",
+                            text = "Lost connection to game server",
                             color = MaterialTheme.colors.error,
                             fontSize = 20.sp
                         )
